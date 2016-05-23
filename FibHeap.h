@@ -1,6 +1,6 @@
+
 struct node
 {
-    int n;
     int degree;
     node* parent;
     node* child;
@@ -9,6 +9,10 @@ struct node
     bool mark;
     int key;
 };
+struct fib_heap_t{
+    struct node* min;
+    int n;
+};
 class FibHeap {
 
 public:
@@ -16,7 +20,7 @@ public:
   ~FibHeap();
   node* create_node(int);
   node* make_heap();
-  node* insert(node* , int);
-  void print_root_list(node *);
-  void heap_union(node*,node*);
+  void insert(fib_heap_t* , int);
+  void print_root_list(fib_heap_t);
+  void heap_union(fib_heap_t*,fib_heap_t*);
 };

@@ -27,58 +27,49 @@ node* FibHeap::make_heap() {
 }
 
 
-node* FibHeap::insert(node* min, int key)
+void FibHeap::insert(fib_heap_t *heap, int key)
 {
     node* node_to_insert = new node;
     node_to_insert = create_node(key);
-    if (min != NULL)
+    if (heap->min != NULL)
     {
-        (min->left)->right = node_to_insert;
-        node_to_insert->right = min;
-        node_to_insert->left = min->left;
-        min->left = node_to_insert;
-        if (node_to_insert->key < min->key)
-            min = node_to_insert;
+        (heap->min->left)->right = node_to_insert;
+        node_to_insert->right = heap->min;
+        node_to_insert->left = heap->min->left;
+        heap->min->left = node_to_insert;
+        if (node_to_insert->key < heap->min->key)
+            heap->min = node_to_insert;
     }
     else
     {
             cout<<"first insert\n";
-            min = node_to_insert;
+            heap->min = node_to_insert;
     }
     if(node_to_insert == NULL)
         cout<<"NULL";
     cout << "key " <<node_to_insert->key<<" inserted\n";
-    return min;
+
 }
 
-void FibHeap::print_root_list(node *start_node)
+void FibHeap::print_root_list(fib_heap_t heap)
 {
     cout << "Here is the roots list:\n";
-    node* temp = start_node;
+    node* temp = heap.min;
     do
     {
         cout<<temp->key<<"\t";
         temp = temp->right;
-    }while(temp != start_node);
+    }while(temp != heap.min);
     cout<<endl;
 }
-void FibHeap::heap_union(node *min1 ,node *min2)
+void FibHeap::heap_union(fib_heap_t *heap1 ,fib_heap_t *heap2)
 {
-   if(min1 == NULL or min2 == NULL)
+   if(heap1->min == NULL or heap2->min == NULL)
         return;
-   min1->right->left  = min2->left;
-   min2->left->right = min1->right;
-   min1->right = min2;
-   min2->left = min1;
-   if(min2 -> key < min1-> key)
-    min1 = min2;
+   heap1->min->right->left  = heap2->min->left;
+   heap2->min->left->right = heap1->min->right;
+   heap1->min->right = heap2->min;
+   heap2->min->left = heap1->min;
+   if(heap2->min -> key < heap1->min-> key)
+    heap1->min = heap2->min;
 }
-/*
-1   H =MAKE-FIB-HEAP()
-2   H.min =H1.min
-3   concatenate the root list of H2 with the root list of H
-4   if (H1.min == NIL) or (H2.min „j NIL and H2.min .key < H1.min.key)
-5          H.min =H2.min
-6   H.n =H1.n + H2.n
-7   return H
-*/
