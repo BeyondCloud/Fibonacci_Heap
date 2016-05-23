@@ -1,4 +1,6 @@
 #include "FibHeap.h"
+#include <math.h>
+#include <limits.h>
 #include <string.h>
 #include <iostream>
 using namespace std;
@@ -20,12 +22,16 @@ node* FibHeap::create_node(int key)
     new_node->key    = key;
     return new_node;
 }
-node* FibHeap::make_heap() {
+node* FibHeap::make_heap()
+{
     node* np;
     np = NULL;
     return np;
 }
-
+node* FibHeap::minimum(fib_heap_t* h)
+{
+     return h->min;
+}
 
 void FibHeap::insert(fib_heap_t *heap, int key)
 {
@@ -71,5 +77,85 @@ void FibHeap::heap_union(fib_heap_t *heap1 ,fib_heap_t *heap2)
    heap1->min->right = heap2->min;
    heap2->min->left = heap1->min;
    if(heap2->min -> key < heap1->min-> key)
-    heap1->min = heap2->min;
+      heap1->min = heap2->min;
 }
+/*
+remove y from the root list of H
+2   make y a child of x, incrementing x.degree
+3   y.mark =FALSE
+
+*/
+//link y to x
+ void FibHeap::heap_link(fib_heap_t* heap, node* y,node* x)
+ {
+
+    y->left->right = y->right;
+    y->right->left = y->left;
+
+    if (x->right == x) //if there is only one root
+        heap->min = x;
+    y->left = y;
+    if (x->child == NULL)
+    {
+        y->right = y;
+        y->parent = x;
+        x->child = y;
+    }
+    else
+    {
+        y->right = x->child;
+        y->left = (x->child)->left;
+        x->child->left->right = y;
+        x->child->left = y;
+    }
+    x->degree++;
+}
+/*
+void FibHeap::consolidate(fib_heap_t *heap)
+{
+    int D = ceil(log2(heap->n));
+    node *A = new node[D];
+    for(int i = 0;i < D ;i++)
+        A[i] = NULL;
+    node* x = heap->min;
+    do
+    {
+        d = x.degree;
+        while(A[d] != NULL)
+        {
+
+        }
+
+
+
+
+        x = x->right;
+    }while(x != heap.min);
+
+}
+*/
+/*
+CONSOLIDATE(H)
+1   Let A[0..D(H.n)] be a new array
+2   for i =0 to D(H.n)
+3          A[i] =NIL
+4   for each node w in the root list of H
+5         x =w
+6         d =x.degree
+7         while A[d] != NIL
+8                      y =A[d]
+9                      if x.key > y.key
+10                             exchange x with y
+11                    FIB-HEAP-LINK(H, y, x)
+12                    A[d] =NIL
+13                    d =d + 1
+14       A[d] =x
+15  H.min =NIL
+16  for i =0 to D(n[H])
+17       if A[i] „j NIL
+18           if H.min == NIL
+19                 create a root list for H containing just A[i]
+20                 H.min = A[i]
+21           else insert A[i] to the root list of H
+               if A[i].key < H.min.key
+*/
