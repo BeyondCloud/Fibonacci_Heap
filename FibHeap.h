@@ -14,10 +14,9 @@ class FibHeap {
 public:
   FibHeap();
   ~FibHeap();
-  void make_heap();
-  void insert(int);
-  void print_root_list();
-  node* get_min_node();
-private:
-  node *min;
+  node* create_node(int);
+  node* make_heap();
+  node* insert(node* , node*);
+  void print_root_list(node *);
+  void heap_union(node*,node*);
 };
