@@ -16,7 +16,7 @@ public:
   ~FibHeap();
   node* create_node(int);
   node* make_heap();
-  node* insert(node* , node*);
+  node* insert(node* , int);
   void print_root_list(node *);
   void heap_union(node*,node*);
 };

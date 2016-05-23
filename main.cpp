@@ -5,25 +5,20 @@ using namespace std;
 
 int main(int argc, char **argv) {
     FibHeap fibheap;
-    node *n1 = fibheap.create_node(31);
     node *heap1 = fibheap.make_heap();
     node *heap2 = fibheap.make_heap();
-    heap1 = fibheap.insert(heap1,n1);
-    n1 = fibheap.create_node(32);
-    heap1 = fibheap.insert(heap1,n1);
-    n1 = fibheap.create_node(33);
-    heap1 = fibheap.insert(heap1,n1);
+    heap1 = fibheap.insert(heap1,31);
+    heap1 = fibheap.insert(heap1,32);
+    heap1 = fibheap.insert(heap1,33);
     fibheap.print_root_list(heap1);
 
-    n1 = fibheap.create_node(26);
-    heap2 = fibheap.insert(heap2,n1);
-    n1 = fibheap.create_node(27);
-    heap2 = fibheap.insert(heap2,n1);
-    n1 = fibheap.create_node(28);
-    heap2 = fibheap.insert(heap2,n1);
+    heap2 = fibheap.insert(heap2,23);
+    heap2 = fibheap.insert(heap2,24);
+    heap2 = fibheap.insert(heap2,25);
 
     fibheap.heap_union(heap1,heap2);
     fibheap.print_root_list(heap1);
+
     /*
     fibheap.make_heap();
     fibheap2.make_heap();

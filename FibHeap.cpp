@@ -27,8 +27,10 @@ node* FibHeap::make_heap() {
 }
 
 
-node* FibHeap::insert(node* min, node* node_to_insert)
+node* FibHeap::insert(node* min, int key)
 {
+    node* node_to_insert = new node;
+    node_to_insert = create_node(key);
     if (min != NULL)
     {
         (min->left)->right = node_to_insert;
