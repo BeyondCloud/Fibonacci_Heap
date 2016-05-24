@@ -54,7 +54,8 @@ void FibHeap::insert(fib_heap_t *heap, int key)
     if(node_to_insert == NULL)
         cout<<"NULL";
     cout << "key " <<node_to_insert->key<<" inserted\n";
-
+    heap->n++;
+    cout << "num of element = " << heap->n << endl;
 }
 
 void FibHeap::print_root_list(fib_heap_t heap)
@@ -68,8 +69,46 @@ void FibHeap::print_root_list(fib_heap_t heap)
     }while(temp != heap.min);
     cout<<endl;
 }
-void FibHeap::heap_union(fib_heap_t *heap1 ,fib_heap_t *heap2)
+/*    node* np;
+    node* H = InitializeHeap();
+    H = H1;
+    (H->left)->right = H2;
+    (H2->left)->right = H;
+    np = H->left;
+    H->left = H2->left;
+    H2->left = np;
+    return H;
+    */
+fib_heap_t FibHeap::heap_union(fib_heap_t *heap1 ,fib_heap_t *heap2)
 {
+    if(heap1->min == NULL )
+        return *heap2;
+    if(heap2->min == NULL )
+        return *heap1;
+    fib_heap_t new_heap;
+    new_heap.min = make_heap();
+    new_heap = *heap1;
+    new_heap.min->right->left  = heap2->min->left;
+    heap2->min->left->right = new_heap.min->right;
+    new_heap.min->right = heap2->min;
+    heap2->min->left = new_heap.min;
+    if(heap2->min -> key < new_heap.min-> key)
+       new_heap.min = heap2->min;
+    new_heap.n =heap1->n + heap2->n;
+    return new_heap;
+    /*
+    fib_heap_t new_heap;
+    heap1->min = fibheap.make_heap();
+    (new_heap->min->left)->right = heap2->min;
+    (heap2->min->left)->right = heap1->min;
+    heap->min = heap1->min->left;
+    heap1->min->left = heap2->min->left;
+    heap2->min->left = new_heap->min;
+    return new_heap;
+    */
+    /*
+   fib_heap_t new_heap;
+   new_heap->min = fibheap.make_heap();
    if(heap1->min == NULL or heap2->min == NULL)
         return;
    heap1->min->right->left  = heap2->min->left;
@@ -78,6 +117,9 @@ void FibHeap::heap_union(fib_heap_t *heap1 ,fib_heap_t *heap2)
    heap2->min->left = heap1->min;
    if(heap2->min -> key < heap1->min-> key)
       heap1->min = heap2->min;
+    heap1->n += heap2->n;
+    */
+
 }
 /*
 remove y from the root list of H
@@ -88,7 +130,11 @@ remove y from the root list of H
 //link y to x
  void FibHeap::heap_link(fib_heap_t* heap, node* y,node* x)
  {
-
+    if(y == heap->min)
+    {
+        cout<<"cannot link min node to other node\n";
+        return;
+    }
     y->left->right = y->right;
     y->right->left = y->left;
 
@@ -110,30 +156,52 @@ remove y from the root list of H
     }
     x->degree++;
 }
-/*
+
 void FibHeap::consolidate(fib_heap_t *heap)
 {
     int D = ceil(log2(heap->n));
-    node *A = new node[D];
+    cout<<"D = " <<D<<endl;
+    node* A[D];
     for(int i = 0;i < D ;i++)
         A[i] = NULL;
     node* x = heap->min;
     do
     {
-        d = x.degree;
-        while(A[d] != NULL)
+        int degree = x->degree;
+        while(A[degree] != NULL)
         {
-
+            node* y = A[degree];
+            if(x->key > y->key)
+            {
+                int tmp = x->key;
+                x->key = y->key;
+                y->key = tmp;
+            }
+            heap_link(heap, y, x);
+            A[degree] = NULL;
+            degree++;
         }
-
-
-
+        A[degree]  = x;
 
         x = x->right;
-    }while(x != heap.min);
+    }while(x != heap->min);
+    heap->min = NULL;
+    for(int i = 0;i <D;i++)
+    {
+        if(A[i]!=NULL)
+        {
+             heap->min = A[i];
+             heap->min->left = heap->min;
+             heap->min->right = heap->min;
+        }
+        else
+        {
+            insert(heap , A[i]->key);
 
+        }
+    }
 }
-*/
+
 /*
 CONSOLIDATE(H)
 1   Let A[0..D(H.n)] be a new array
@@ -152,7 +220,7 @@ CONSOLIDATE(H)
 14       A[d] =x
 15  H.min =NIL
 16  for i =0 to D(n[H])
-17       if A[i] „j NIL
+17       if A[i] != NIL
 18           if H.min == NIL
 19                 create a root list for H containing just A[i]
 20                 H.min = A[i]

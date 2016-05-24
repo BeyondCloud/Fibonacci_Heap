@@ -23,7 +23,7 @@ public:
   node* minimum(fib_heap_t*);
   void insert(fib_heap_t* , int);
   void print_root_list(fib_heap_t);
-  void heap_union(fib_heap_t*,fib_heap_t*);
+  fib_heap_t heap_union(fib_heap_t*,fib_heap_t*);
   void heap_link(fib_heap_t*, node*,node*);
-//  void consolidate(fib_heap_t*);
+  void consolidate(fib_heap_t*);
 };
