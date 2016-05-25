@@ -130,11 +130,13 @@ remove y from the root list of H
 //link y to x
  void FibHeap::heap_link(fib_heap_t* heap, node* y,node* x)
  {
+
     if(y == heap->min)
     {
         cout<<"cannot link min node to other node\n";
         return;
     }
+
     y->left->right = y->right;
     y->right->left = y->left;
 
@@ -157,14 +159,16 @@ remove y from the root list of H
     x->degree++;
 }
 
-void FibHeap::consolidate(fib_heap_t *heap)
+void FibHeap::consolidate(fib_heap_t* heap)
 {
+     int vals = heap->min->key;
     int D = ceil(log2(heap->n));
     cout<<"D = " <<D<<endl;
     node* A[D];
     for(int i = 0;i < D ;i++)
         A[i] = NULL;
     node* x = heap->min;
+
     do
     {
         int degree = x->degree;
@@ -196,8 +200,8 @@ void FibHeap::consolidate(fib_heap_t *heap)
         }
         else
         {
+            cout<<"    "<<A[i]->key;
             insert(heap , A[i]->key);
-
         }
     }
 }

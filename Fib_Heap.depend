@@ -1,14 +1,14 @@
 # depslib dependency file v1.0
-1464108227 source:c:\users\administrator\desktop\algorithm_hw\fibonacci_heap\fibheap.cpp
+1464112000 source:c:\users\administrator\desktop\algorithm_hw\fibonacci_heap\fibheap.cpp
 	"FibHeap.h"
 	<math.h>
 	<limits.h>
 	<string.h>
 	<iostream>
 
-1464107769 c:\users\administrator\desktop\algorithm_hw\fibonacci_heap\fibheap.h
+1464111720 c:\users\administrator\desktop\algorithm_hw\fibonacci_heap\fibheap.h
 
-1464108315 source:c:\users\administrator\desktop\algorithm_hw\fibonacci_heap\main.cpp
+1464111889 source:c:\users\administrator\desktop\algorithm_hw\fibonacci_heap\main.cpp
 	<iostream>
 	"FibHeap.h"
 

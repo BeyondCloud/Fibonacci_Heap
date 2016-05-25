@@ -1,7 +1,7 @@
 
 struct node
 {
-    int degree;
+    int degree = 0;
     node* parent;
     node* child;
     node* left;
