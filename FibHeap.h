@@ -28,5 +28,6 @@ public:
   void consolidate(fib_heap_t*);
   void decrease_key(fib_heap_t*,node*,int);
   node* extract_min(fib_heap_t*);
-
+  void cut(fib_heap_t*,node*,node*);
+  void cascading_cut(fib_heap_t*,node*);
 };

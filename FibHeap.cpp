@@ -240,20 +240,6 @@ void FibHeap::decrease_key(fib_heap_t *heap,node *from ,int to)
     if(to < heap->min->key)
         heap->min = y;
 }
-/*FIB-HEAP-EXTRACT-MIN(H)
-1   z =H.min
-2   if z != NIL
-3      for each child x of z
-4                 add x to the root list of H
-5                 x.p =NIL
-6      remove z from the root list of H
-7      if z == z.right
-8                H.min =NIL
-9      else    H.min =z.right
-10              CONSOLIDATE(H)
-11    H.n =H.n - 1
-12 return z
-*/
 node* FibHeap::extract_min(fib_heap_t *heap)
 {
     cout<<"extract"<<heap->min->key<<"from heap\n";
@@ -287,4 +273,52 @@ node* FibHeap::extract_min(fib_heap_t *heap)
     }
     return z;
 }
+/*CUT(H, x, y)
+1   remove x from the child list of y, decrementing y.degree
+2   add x to the root list of H
+3   x.p =NIL
+4   x.mark =FALSE
+*/
+void FibHeap::cut(fib_heap_t *heap,node *x,node *y)
+{
+    x->parent = NULL;
+    x->mark = false;
+    if(y->child->right != x)
+    {
+        y->child  = y->child->right;
+        x->left->right = x->right;
+        x->right->left = x->left;
+    }
+    else
+    {
+        y->child = NULL;
+    }
+    //move x to root
+    x->left  = heap->min->left;
+    x->right = heap->min;
+    heap->min->left->right = x;
+    heap->min->left = x;
 
+}
+/*CASCADING-CUT(H, y)
+1   z =y.p
+2   if z != NIL
+3        if y.mark == FALSE
+4                y.mark =TRUE
+5        else CUT(H, y, z)
+6                CASCADING-CUT(H, z)
+*/
+void FibHeap::cascading_cut(fib_heap_t *heap,node *y)
+{
+    node* z = y->parent;
+    if(z != NULL)
+    {
+        if( y->mark == false)
+            y->mark =true;
+        else
+        {
+            cut(heap,y,z);
+            cascading_cut(heap,z);
+        }
+    }
+}
