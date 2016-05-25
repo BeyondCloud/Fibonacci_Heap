@@ -26,4 +26,5 @@ public:
   fib_heap_t heap_union(fib_heap_t*,fib_heap_t*);
   void heap_link(fib_heap_t*, node*,node*);
   void consolidate(fib_heap_t*);
+  void decrease_key(fib_heap_t*,node*,int);
 };

@@ -161,16 +161,17 @@ remove y from the root list of H
 
 void FibHeap::consolidate(fib_heap_t* heap)
 {
-     int vals = heap->min->key;
+    int vals = heap->min->key;
     int D = ceil(log2(heap->n));
-    cout<<"D = " <<D<<endl;
     node* A[D];
     for(int i = 0;i < D ;i++)
         A[i] = NULL;
-    node* x = heap->min;
+    node* w = heap->min;
+    node* x;
 
     do
     {
+        x = w;
         int degree = x->degree;
         while(A[degree] != NULL)
         {
@@ -180,54 +181,76 @@ void FibHeap::consolidate(fib_heap_t* heap)
                 int tmp = x->key;
                 x->key = y->key;
                 y->key = tmp;
+                if(y == heap->min)
+                    heap->min = x;
             }
             heap_link(heap, y, x);
+            cout<<"link "<< y->key << "to "<<x->key<<endl;
             A[degree] = NULL;
             degree++;
         }
         A[degree]  = x;
 
-        x = x->right;
-    }while(x != heap->min);
+        w = w->right;
+    }while(w != heap->min);
     heap->min = NULL;
     for(int i = 0;i <D;i++)
     {
-        if(A[i]!=NULL)
+        if (A[i] != NULL)
         {
+             if(heap->min == NULL)
+            {
              heap->min = A[i];
              heap->min->left = heap->min;
              heap->min->right = heap->min;
+            }
+            else
+            {
+                A[i]->right = heap->min;
+                A[i]->left = heap->min->left;
+                heap->min->left->right = A[i];
+                heap->min->left = A[i];
+                if(A[i]->key < heap->min->key)
+                    heap->min = A[i];
+            }
         }
-        else
-        {
-            cout<<"    "<<A[i]->key;
-            insert(heap , A[i]->key);
-        }
+
+
     }
 }
-
 /*
-CONSOLIDATE(H)
-1   Let A[0..D(H.n)] be a new array
-2   for i =0 to D(H.n)
-3          A[i] =NIL
-4   for each node w in the root list of H
-5         x =w
-6         d =x.degree
-7         while A[d] != NIL
-8                      y =A[d]
-9                      if x.key > y.key
-10                             exchange x with y
-11                    FIB-HEAP-LINK(H, y, x)
-12                    A[d] =NIL
-13                    d =d + 1
-14       A[d] =x
-15  H.min =NIL
-16  for i =0 to D(n[H])
-17       if A[i] != NIL
-18           if H.min == NIL
-19                 create a root list for H containing just A[i]
-20                 H.min = A[i]
-21           else insert A[i] to the root list of H
-               if A[i].key < H.min.key
+BINOMIAL-HEAP-DECREASE-KEY(H, x, k)
+1   if k > x.key
+2         error new key is greater than current
+3   x.key =k
+4   y =x
+5   z =y.p
+6   while z != NIL and y.key < z.key
+7            exchange y.key  z.key
+8            /* exchange satellite fields in y and z
+9            y =z
+10          z =y.p
 */
+
+void FibHeap::decrease_key(fib_heap_t *heap,node *from ,int to)
+{
+    cout <<"decrease key "<< from->key << " -> " << to <<endl;
+    if(to > from->key)
+    {
+        cout << "new key is greater than current";
+        return;
+    }
+    from->key = to;
+    node* y = from;
+    node* z = y->parent;
+    while(z != NULL and y->key <z->key)
+    {
+        int tmp = y->key;
+        y->key = z->key;
+        z->key = tmp;
+        y = z ;
+        z = y->parent;
+    }
+
+}
+
