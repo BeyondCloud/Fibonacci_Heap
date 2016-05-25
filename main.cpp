@@ -30,5 +30,9 @@ int main(int argc, char **argv) {
     fibheap.print_root_list(heap12);
     fibheap.decrease_key(&heap12,heap12.min->right->child,2);
     fibheap.print_root_list(heap12);
+    minNode = fibheap.extract_min(&heap12);
+    cout<<"tree after extract min:";
+    fibheap.print_root_list(heap12);
+    cout<<heap12.min->key;
     return 0;
 }

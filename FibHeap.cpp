@@ -218,20 +218,6 @@ void FibHeap::consolidate(fib_heap_t* heap)
 
     }
 }
-/*
-BINOMIAL-HEAP-DECREASE-KEY(H, x, k)
-1   if k > x.key
-2         error new key is greater than current
-3   x.key =k
-4   y =x
-5   z =y.p
-6   while z != NIL and y.key < z.key
-7            exchange y.key  z.key
-8            /* exchange satellite fields in y and z
-9            y =z
-10          z =y.p
-*/
-
 void FibHeap::decrease_key(fib_heap_t *heap,node *from ,int to)
 {
     cout <<"decrease key "<< from->key << " -> " << to <<endl;
@@ -251,6 +237,54 @@ void FibHeap::decrease_key(fib_heap_t *heap,node *from ,int to)
         y = z ;
         z = y->parent;
     }
-
+    if(to < heap->min->key)
+        heap->min = y;
+}
+/*FIB-HEAP-EXTRACT-MIN(H)
+1   z =H.min
+2   if z != NIL
+3      for each child x of z
+4                 add x to the root list of H
+5                 x.p =NIL
+6      remove z from the root list of H
+7      if z == z.right
+8                H.min =NIL
+9      else    H.min =z.right
+10              CONSOLIDATE(H)
+11    H.n =H.n - 1
+12 return z
+*/
+node* FibHeap::extract_min(fib_heap_t *heap)
+{
+    cout<<"extract"<<heap->min->key<<"from heap\n";
+    node *z = heap->min;
+    node *current = z->child;
+    if( z != NULL)
+    {
+        do
+        {
+            node *next = current->right;
+            heap->min->left->right = current;
+            current->right = heap->min;
+            current->left = heap->min->left;
+            heap->min->left = current;
+            current->parent = NULL;
+            current = next;
+            cout << "move " <<current->key<<" to root list\n";
+        }while(current !=  heap->min->child);
+        //remove min from heap
+        heap->min->child = NULL;
+        heap->min->left->right = heap->min ->right;
+        heap->min->right->left = heap->min ->left;
+        if(heap->min->right == heap->min)
+            heap->min = NULL;
+        else
+        {
+            heap->min = heap->min->right;
+            consolidate(heap);
+        }
+        heap->n--;
+    }
+    return z;
 }
 
